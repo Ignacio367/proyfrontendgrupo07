@@ -301,18 +301,65 @@
 
 
         <div class="card-footer d-flex justify-content-between">
-          <button class="btn btn-outline-primary btn-sm">
-            <i class="bi bi-eye me-1"></i>
-            Detalle
-          </button>
+            <button class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-eye me-1"></i>
+                Detalle
+            </button>
 
-          <button class="btn btn-primary btn-sm">
-            <i class="bi bi-pencil me-1"></i>
-            Editar
-          </button>
+            <button class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil me-1"></i>
+                Editar
+            </button>
 
+            <button
+                class="btn btn-danger btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#modalEliminar"
+                (click)="seleccionarAutoAEliminar(auto)">
+                Eliminar
+            </button>
         </div>
       </div>
     </div>
   </div>
+
+    
+    <!-- MODAL ELIMINACION DE AUTO -->
+    <div class="modal fade" id="modalEliminar" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                ¿Seguro que querés eliminar el auto?
+                </p>
+
+                <div *ngIf="autoAEliminar">
+                <strong>{{ autoAEliminar.marca }} {{ autoAEliminar.modelo }}</strong>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+                </button>
+
+                <button
+                class="btn btn-danger"
+                data-bs-dismiss="modal"
+                (click)="eliminarAuto()">
+                Sí, eliminar
+                </button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
 </div>

@@ -53,6 +53,11 @@ export class AutosComponent {
     this.imagenes.removeAt(index);
   }
 
+
+  // ELIMINAR AUTO
+  autoAEliminar: Auto | null = null;
+
+
   ngOnInit(): void {
     this.autosService.getAutos().subscribe(data => {
       this.autosList = data;
@@ -98,13 +103,25 @@ export class AutosComponent {
   }
 
   limpiarFormularioAuto() {
-    this.formAuto.reset();
+      this.formAuto.reset();
 
-    this.imagenes.clear();
+      this.imagenes.clear();
 
-    // Si querés que al abrir de nuevo ya haya un input para una imagen:
-    this.agregarImagen();
-}
+      // Si querés que al abrir de nuevo ya haya un input para una imagen:
+      this.agregarImagen();
+  }
+
+  // ELIMINAR AUTO
+  eliminarAuto() {
+    if(!this.autoAEliminar) return;
+    this.autosService.deleteAuto(this.autoAEliminar.id);
+    this.autoAEliminar = null;
+  }
+
+  seleccionarAutoAEliminar(autoAEliminar: Auto) {
+    this.autoAEliminar = autoAEliminar;
+  }
+
 
   // FILTROS
   filtrarAutos() {
