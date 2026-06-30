@@ -1,0 +1,159 @@
+<div class="container-fluid py-3 min-vh-100">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+
+    <div>
+      <h3 class="mb-0">Gestión de Autos</h3>
+      <small class="text-secondary">
+        Listado de vehículos registrados en el sistema
+      </small>
+    </div>
+
+    <button class="btn btn-primary">
+      <i class="bi bi-plus-circle me-1"></i>
+      Nuevo Auto
+    </button>
+
+  </div>
+
+  <!-- FILTROS -->
+    <form [formGroup]="filtrosForm">
+
+        <div class="card shadow-sm mb-3">
+
+            <div class="card-body">
+
+            <div class="row g-2">
+
+                <div class="col-md-3">
+                <input type="text"
+                        class="form-control"
+                        formControlName="texto"
+                        placeholder="Buscar marca o modelo"
+                        (keydown.enter)="filtrarAutos()">
+                </div>
+
+                <div class="col-md-2">
+                <select class="form-select" formControlName="marca">
+                    <option value="">Marca</option>
+                    <option>Toyota</option>
+                    <option>Fiat</option>
+                    <option>Ford</option>
+                </select>
+                </div>
+
+                <div class="col-md-2">
+                <select class="form-select" formControlName="anio">
+                    <option value="">Año</option>
+                    <option>2024</option>
+                    <option>2023</option>
+                    <option>2022</option>
+                </select>
+                </div>
+
+                <div class="col-md-2">
+                <select class="form-select" formControlName="estado">
+                    <option value="">Estado</option>
+                    <option>disponible</option>
+                    <option>reservado</option>
+                    <option>vendido</option>
+                </select>
+                </div>
+
+                <div class="col-md-2 d-grid">
+                <button type="button"
+                        class="btn btn-primary"
+                        (click)="filtrarAutos()">
+
+                    <i class="bi bi-funnel me-1"></i>
+                    Filtrar
+                </button>
+                </div>
+
+                <div class="col-md-1 d-grid">
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        (click)="limpiarFiltros()">
+
+                    <i class="bi bi-x-circle"></i>
+                </button>
+                </div>
+
+            </div>
+
+            </div>
+
+        </div>
+    </form>
+
+  <!-- LISTA -->
+  <div class="row">
+
+    <div class="col-md-4 mb-3" *ngFor="let auto of filteredAutosList">
+
+      <div class="card h-100 shadow-sm">
+
+        <img [src]="auto.imagenes[0]"
+             class="card-img-top"
+             style="height: 180px; object-fit: cover;">
+
+        <div class="card-body">
+
+          <h5 class="card-title mb-1">
+            {{ auto.marca }} {{ auto.modelo }} {{ auto.anio }}
+          </h5>
+
+          <small class="text-secondary">
+            {{ auto.version }}
+          </small>
+
+          <hr>
+
+          <p class="mb-1">
+            <strong>Precio:</strong>
+            <span class="text-primary fw-semibold">
+                ${{ auto.precio }}
+            </span>
+        </p>
+
+          <p class="mb-1">
+            <strong>Kilometraje:</strong>
+            {{ auto.kilometraje }} km
+          </p>
+
+          <p class="mb-2">
+            <strong>Color:</strong>
+            {{ auto.color }}
+          </p>
+
+          <span class="badge"
+                [ngClass]="{
+                  'bg-success': auto.estado === 'disponible',
+                  'bg-warning text-dark': auto.estado === 'reservado',
+                  'bg-danger': auto.estado === 'vendido'
+                }">
+
+            {{ auto.estado }}
+
+          </span>
+
+        </div>
+
+
+        <div class="card-footer d-flex justify-content-between">
+          <button class="btn btn-outline-primary btn-sm">
+            <i class="bi bi-eye me-1"></i>
+            Detalle
+          </button>
+
+          <button class="btn btn-primary btn-sm">
+            <i class="bi bi-pencil me-1"></i>
+            Editar
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
