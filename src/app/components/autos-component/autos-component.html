@@ -1,23 +1,182 @@
 <div class="container-fluid py-3 min-vh-100">
 
-  <!-- HEADER -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
 
-    <div>
-      <h3 class="mb-0">Gestión de Autos</h3>
-      <small class="text-secondary">
-        Listado de vehículos registrados en el sistema
-      </small>
+        <div>
+        <h3 class="mb-0">Gestión de Autos</h3>
+        <small class="text-secondary">
+            Listado de vehículos registrados en el sistema
+        </small>
+        </div>
+
+        <button class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#autoModal">
+            <i class="bi bi-plus-circle me-1"></i>
+            Nuevo Auto
+        </button>
+
+    </div>
+    
+    <!-- MODAL AÑADIR AUTO -->
+    <div class="modal fade" id="autoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+        <!-- HEADER -->
+        <div class="modal-header">
+            <h5 class="modal-title">Nuevo Auto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- FORM -->
+        <form [formGroup]="formAuto" (ngSubmit)="aniadirAuto()">
+
+            <!-- BODY -->
+            <div class="modal-body">
+            <div class="row g-3">
+
+                <!-- MARCA -->
+                <div class="col-md-6">
+                <label class="form-label">Marca</label>
+                <input class="form-control" formControlName="marca" placeholder="Ej: Toyota">
+                </div>
+
+                <!-- MODELO -->
+                <div class="col-md-6">
+                <label class="form-label">Modelo</label>
+                <input class="form-control" formControlName="modelo" placeholder="Ej: Corolla">
+                </div>
+
+                <!-- AÑO -->
+                <div class="col-md-4">
+                <label class="form-label">Año</label>
+                <input type="number" class="form-control" formControlName="anio">
+                </div>
+
+                <!-- VERSION -->
+                <div class="col-md-4">
+                <label class="form-label">Versión</label>
+                <input class="form-control" formControlName="version">
+                </div>
+
+                <!-- KILOMETRAJE -->
+                <div class="col-md-4">
+                <label class="form-label">Kilometraje</label>
+                <input type="number" class="form-control" formControlName="kilometraje">
+                </div>
+
+                <!-- COMBUSTIBLE -->
+                <div class="col-md-4">
+                <label class="form-label">Combustible</label>
+                <select class="form-select" formControlName="combustible">
+                    <option value="nafta">Nafta</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="hibrido">Híbrido</option>
+                    <option value="electrico">Eléctrico</option>
+                </select>
+                </div>
+
+                <!-- TRANSMISION -->
+                <div class="col-md-4">
+                <label class="form-label">Transmisión</label>
+                <select class="form-select" formControlName="transmision">
+                    <option value="manual">Manual</option>
+                    <option value="automatica">Automática</option>
+                </select>
+                </div>
+
+                <!-- COLOR -->
+                <div class="col-md-4">
+                <label class="form-label">Color</label>
+                <input class="form-control" formControlName="color">
+                </div>
+
+                <!-- PRECIO -->
+                <div class="col-md-6">
+                <label class="form-label">Precio</label>
+                <input type="number" class="form-control" formControlName="precio">
+                </div>
+
+                <!-- DESCRIPCION -->
+                <div class="col-md-6">
+                <label class="form-label">Descripción</label>
+                <input class="form-control" formControlName="descripcion">
+                </div>
+                
+
+
+                <!-- IMÁGENES -->
+                <div class="col-12">
+                    <label class="form-label">Imágenes</label>
+
+                    <div formArrayName="imagenes">
+                        <div
+                        class="input-group mb-2"
+                        *ngFor="let img of imagenes.controls; let i = index">
+
+                        <input
+                            class="form-control"
+                            [formControlName]="i"
+                            placeholder="https://...">
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-danger"
+                            (click)="eliminarImagen(i)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+
+                        </div>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary mt-2"
+                        (click)="agregarImagen()">
+                        <i class="bi bi-plus-lg"></i>
+                        Agregar imagen
+                    </button>
+
+                    <small class="text-secondary">
+                        Debe ingresar al menos una imagen.
+                    </small>
+                </div>
+
+                <!-- ESTADO -->
+                <div class="col-md-6">
+                <label class="form-label">Estado</label>
+                <select class="form-select" formControlName="estado">
+                    <option value="">Seleccionar...</option>
+                    <option value="disponible">Disponible</option>
+                    <option value="reservado">Reservado</option>
+                    <option value="vendido">Vendido</option>
+                </select>
+                </div>
+
+            </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="limpiarFormularioAuto()">
+                Cancelar
+            </button>
+
+            <button type="submit" class="btn btn-primary" [disabled]="formAuto.invalid">
+                Guardar Auto
+            </button>
+            </div>
+
+        </form>
+
+        </div>
+    </div>
     </div>
 
-    <button class="btn btn-primary">
-      <i class="bi bi-plus-circle me-1"></i>
-      Nuevo Auto
-    </button>
 
-  </div>
-
-  <!-- FILTROS -->
+    <!-- FILTROS -->
     <form [formGroup]="filtrosForm">
 
         <div class="card shadow-sm mb-3">

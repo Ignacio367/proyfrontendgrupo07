@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Auto, AutosService } from '../../services/autos-service';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-autos-component',
@@ -17,7 +17,7 @@ export class AutosComponent {
 
   autosList: Auto[] = [];
 
-  // filtro
+  // FILTRO
   filteredAutosList: Auto[] = [];
 
   filtrosForm = new FormGroup({
@@ -27,6 +27,31 @@ export class AutosComponent {
     estado: new FormControl('')
   });
 
+  // Nuevo auto FORM
+  formAuto = new FormGroup({
+    marca: new FormControl('', [Validators.required]),
+    modelo: new FormControl('', [Validators.required]),
+    anio: new FormControl(null, [Validators.required]),
+    version: new FormControl('', [Validators.required]),
+    kilometraje: new FormControl(null, [Validators.required]),
+    combustible: new FormControl('', [Validators.required]),
+    transmision: new FormControl('', [Validators.required]),
+    color: new FormControl('', [Validators.required]),
+    precio: new FormControl(null, [Validators.required]),
+    descripcion: new FormControl('', [Validators.required]),
+    imagenes: new FormArray([], Validators.required),
+    estado: new FormControl('', [Validators.required])
+  });
+
+  get imagenes() {
+    return this.formAuto.get('imagenes') as FormArray;
+  }
+  agregarImagen() {
+    this.imagenes.push(new FormControl('', Validators.required));
+  }
+  eliminarImagen(index: number) {
+    this.imagenes.removeAt(index);
+  }
 
   ngOnInit(): void {
     this.autosService.getAutos().subscribe(data => {
@@ -42,6 +67,45 @@ export class AutosComponent {
   }
 
   
+  // AÑADIR AUTO
+  aniadirAuto() {
+    if(this.formAuto.invalid){
+      this.formAuto.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.formAuto.value;
+
+    const nuevoAuto: Auto = {
+      id: Date.now(),
+      marca: formValue.marca!,
+      modelo: formValue.modelo!,
+      anio: formValue.anio!,
+      version: formValue.version!,
+      kilometraje: formValue.kilometraje!,
+      combustible: formValue.combustible as Auto['combustible'],
+      transmision: formValue.transmision as Auto['transmision'],
+      color: formValue.color!,
+      precio: formValue.precio!,
+      descripcion: formValue.descripcion!,
+      estado: formValue.estado as Auto['estado'],
+      imagenes: formValue.imagenes || []
+    };
+
+    this.autosService.addAuto(nuevoAuto);
+
+    this.limpiarFormularioAuto();
+  }
+
+  limpiarFormularioAuto() {
+    this.formAuto.reset();
+
+    this.imagenes.clear();
+
+    // Si querés que al abrir de nuevo ya haya un input para una imagen:
+    this.agregarImagen();
+}
+
   // FILTROS
   filtrarAutos() {
     const filtros = this.filtrosForm.value;
