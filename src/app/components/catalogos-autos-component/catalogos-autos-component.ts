@@ -43,7 +43,7 @@ export class CatalogosAutosComponent {
 
   ngOnInit(): void {
     this.autosService.getAutos().subscribe(data => {
-      this.autosList = data;
+      this.autosList = data.filter(auto => auto.visible === true);
 
       // SOLO AUTOS DISPONIBLES
       this.filteredAutosList = this.autosList.filter(auto => auto.estado == "disponible"); 

@@ -54,7 +54,7 @@ export class VentaComponent {
 
     this.autosService.getAutos().subscribe(autos => {
       // Solo mostrar autos disponibles
-      this.autos = autos.filter(auto => auto.estado === 'disponible');
+      this.autos = autos.filter(auto => auto.estado === 'disponible' && auto.visible === true);
     });
 
     this.vendedoresService.getVendedores().subscribe(vendedores => {
@@ -77,6 +77,19 @@ export class VentaComponent {
         cuotasControl.disable();
       }
 
+    });
+
+    // ACTUALIZA EL DESCUENTO
+    this.ventaForm.get('autoId')?.valueChanges.subscribe(autoId => {
+      if (!autoId) return;
+
+      const auto = this.autos.find(a => a.id === autoId);
+
+      if(!auto) return;
+
+      this.ventaForm.patchValue({
+        descuento: auto.descuento ?? 0
+      });
     });
   }
 
@@ -115,7 +128,6 @@ export class VentaComponent {
   }
 
   // CONFIRMACION VENTA
-
   confirmarVenta(): void {
 
     if(this.ventaForm.invalid) return;
@@ -136,6 +148,14 @@ export class VentaComponent {
     console.log(venta)
     this.ventaCreada = venta;
 
+    // Actualizacion estado del auto (a vendido)
+    let auto: Auto | undefined = this.autosService.getAutoById(venta.autoId);
+    if(auto){
+      this.autosService.updateAuto({...auto, estado: "vendido"})
+    }
+
+
+    // reseteo ventas
     this.ventaForm.reset({
       clienteId: null,
       autoId: null,

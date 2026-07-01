@@ -71,8 +71,9 @@ export class GestionAutosComponent {
 
   ngOnInit(): void {
     this.autosService.getAutos().subscribe(data => {
-      this.autosList = data;
-      this.filteredAutosList = data;
+      // si no es visible es porque el auto fue eliminado
+      this.autosList = data.filter(data => data.visible === true); 
+      this.filteredAutosList = this.autosList;
 
       this.changeDetectorRef.detectChanges();
     });
@@ -135,7 +136,8 @@ export class GestionAutosComponent {
       descuento: formValue.descuento ?? 0,
       descripcion: formValue.descripcion!,
       estado: formValue.estado as Auto['estado'],
-      imagenes: (formValue.imagenes as string[]).filter(Boolean)
+      imagenes: (formValue.imagenes as string[]).filter(Boolean),
+      visible: true,
     };
 
     this.autosService.updateAuto(autoActualizado);
@@ -170,7 +172,8 @@ export class GestionAutosComponent {
       descuento: formValue.descuento ?? 0,
       descripcion: formValue.descripcion!,
       estado: formValue.estado as Auto['estado'],
-      imagenes: formValue.imagenes || []
+      imagenes: formValue.imagenes || [],
+      visible: true,
     };
 
     this.autosService.addAuto(nuevoAuto);

@@ -16,6 +16,7 @@ export interface Auto {
   descripcion: string;
   estado: 'disponible' | 'reservado' | 'vendido';
   imagenes: string[];
+  visible: boolean;
 }
 
 @Injectable({
@@ -39,7 +40,8 @@ export class AutosService {
       descuento: 0,
       descripcion: 'Sedán cómodo y confiable',
       estado: 'disponible',
-      imagenes: ['assets/autos/corolla.jpg']
+      imagenes: ['assets/autos/corolla.jpg'],
+      visible: true,
     },
     {
       id: 2,
@@ -55,7 +57,8 @@ export class AutosService {
       descuento: 40,
       descripcion: 'Compacto deportivo',
       estado: 'reservado',
-      imagenes: ['assets/autos/golf.jpg']
+      imagenes: ['assets/autos/golf.jpg'],
+      visible: true,
     },
     {
       id: 3,
@@ -71,7 +74,8 @@ export class AutosService {
       descuento: 10,
       descripcion: 'Económico y eficiente',
       estado: 'vendido',
-      imagenes: ['assets/autos/focus.jpg']
+      imagenes: ['assets/autos/focus.jpg'],
+      visible: true,
     }
   ];
 
@@ -106,7 +110,12 @@ export class AutosService {
 
   // Eliminar un auto por ID
   deleteAuto(id: number): void {
-    this.autos = this.autos.filter(a => a.id !== id);
-    this.autosSubject.next(this.autos);
+    const auto = this.autos.find(a => a.id === id);
+
+    if(!auto) return;
+
+    auto.visible = false;
+
+    this.autosSubject.next([...this.autos]);
   }
 }
