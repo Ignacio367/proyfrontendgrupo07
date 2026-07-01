@@ -78,6 +78,19 @@ export class VentaComponent {
       }
 
     });
+
+    // ACTUALIZA EL DESCUENTO
+    this.ventaForm.get('autoId')?.valueChanges.subscribe(autoId => {
+      if (!autoId) return;
+
+      const auto = this.autos.find(a => a.id === autoId);
+
+      if(!auto) return;
+
+      this.ventaForm.patchValue({
+        descuento: auto.descuento ?? 0
+      });
+    });
   }
 
   // GETTERS
