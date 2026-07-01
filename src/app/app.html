@@ -138,15 +138,19 @@
           <div class="input-group input-group-sm">
             <input
               type="email"
-              name="email"
               class="form-control"
               [(ngModel)]="email"
-              placeholder="tuemail@ejemplo.com">
-
+              name="email"
+              required
+              email  
+              #emailRef="ngModel">
+              <!-- el atributo email verifica formato de email real -->
+              <!-- #emailRef="ngModel" guarda una referencia a este objeto del template (#emailRef es el nombre de la variable local) -->
             <button
               class="btn btn-outline-light"
               type="button"
-              (click)="guardarEmail()">
+              (click)="guardarEmail()"
+              [disabled]="emailRef.invalid">
               Enviar
             </button>
           </div>
