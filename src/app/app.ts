@@ -12,6 +12,8 @@ import { ThemeService } from './services/theme-service';
 export class App {
   protected readonly title = signal('proyfrontend07');
 
+  currentYear = new Date().getFullYear();
+
   constructor(private themeService: ThemeService) {}
 
   get theme() {

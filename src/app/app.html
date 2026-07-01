@@ -99,3 +99,96 @@
 <div class="container mt-3">
   <router-outlet></router-outlet>
 </div>
+
+<footer class="bg-dark text-light mt-5 pt-5 pb-4">
+
+  <div class="container-fluid">
+
+    <div class="row g-4 align-items-start">
+
+      <!-- 1. PRESENTACIÓN -->
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-3">Concesionaria</h5>
+
+        <p class="text-secondary small">
+          Sistema de gestión de autos, ventas y clientes.
+        </p>
+      </div>
+
+      <!-- 2. CONTACTO -->
+      <div class="col-md-4">
+
+        <h6 class="fw-semibold mb-3">Contacto</h6>
+
+        <p class="small text-secondary mb-2">
+          📍 Jujuy, Argentina
+        </p>
+
+        <p class="small text-secondary mb-3">
+          ✉️ contacto@concesionaria.com
+        </p>
+
+        <!-- EMAIL (FUTURA API) -->
+        <div>
+
+          <label class="form-label text-secondary small mb-2">
+            Suscripción a novedades
+          </label>
+
+          <div class="input-group input-group-sm">
+
+            <input
+              type="email"
+              class="form-control"
+              placeholder="tuemail@ejemplo.com">
+
+            <button class="btn btn-outline-light" type="button">
+              Enviar
+            </button>
+
+          </div>
+
+          <small class="text-secondary d-block mt-2">
+            Recibí actualizaciones sobre nuevos vehículos y promociones.
+          </small>
+
+        </div>
+
+      </div>
+
+      <!-- 3. REDES -->
+      <div class="col-md-4">
+
+        <h6 class="fw-semibold mb-3">Seguinos</h6>
+
+        <p class="text-secondary small mb-3">
+          Conectate con nosotros en redes sociales.
+        </p>
+
+        <div class="d-flex gap-3 fs-5 mb-3">
+
+          <a href="https://www.instagram.com/nacho367_/" target="_blank" class="text-light">
+            <i class="bi bi-instagram"></i>
+          </a>
+
+          <a href="https://facebook.com" target="_blank" class="text-light">
+            <i class="bi bi-facebook"></i>
+          </a>
+
+          <a href="https://x.com" target="_blank" class="text-light">
+            <i class="bi bi-twitter-x"></i>
+          </a>
+
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="text-secondary mt-4">
+
+    <div class="text-center small text-secondary">
+      © {{ currentYear }} Concesionaria - Todos los derechos reservados
+    </div>
+
+  </div>
+</footer>
