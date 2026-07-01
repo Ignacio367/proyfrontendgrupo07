@@ -1,0 +1,135 @@
+<div class="container py-4">
+
+  <h3 class="mb-4">Nueva Venta</h3>
+
+  <form [formGroup]="ventaForm">
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+
+        <div class="row g-3">
+
+          <!-- CLIENTE -->
+          <div class="col-md-4">
+            <label class="form-label">Cliente</label>
+            <select class="form-select" formControlName="cliente">
+              <option [ngValue]="null">Seleccionar cliente</option>
+              <option *ngFor="let c of clientes" [ngValue]="c">
+                {{ c.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <!-- AUTO -->
+          <div class="col-md-4">
+            <label class="form-label">Auto</label>
+            <select class="form-select" formControlName="auto">
+              <option [ngValue]="null">Seleccionar auto</option>
+              <option *ngFor="let a of autos" [ngValue]="a">
+                {{ a.modelo }} - ${{ a.precio }}
+              </option>
+            </select>
+          </div>
+
+          <!-- VENDEDOR -->
+          <div class="col-md-4">
+            <label class="form-label">Vendedor</label>
+            <select class="form-select" formControlName="vendedor">
+              <option [ngValue]="null">Seleccionar vendedor</option>
+              <option *ngFor="let v of vendedores" [ngValue]="v">
+                {{ v.nombre }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <!-- RESUMEN -->
+        <div class="mb-3">
+          <h5>Resumen</h5>
+
+          <p class="mb-1">
+            <strong>Cliente:</strong>
+            {{ ventaForm.value.cliente?.nombre || '-' }}
+          </p>
+
+          <p class="mb-1">
+            <strong>Auto:</strong>
+            {{ ventaForm.value.auto?.modelo || '-' }}
+          </p>
+
+          <p class="mb-1">
+            <strong>Precio:</strong>
+            ${{ ventaForm.value.auto?.precio || 0 }}
+          </p>
+
+          <p class="mb-1">
+            <strong>Vendedor:</strong>
+            {{ ventaForm.value.vendedor?.nombre || '-' }}
+          </p>
+        </div>
+
+        <!-- BOTÓN -->
+        <button
+          type="button"
+          class="btn btn-success w-100"
+          (click)="crearVenta()"
+        >
+          Confirmar venta
+        </button>
+
+      </div>
+    </div>
+
+  </form>
+
+
+
+  <!-- MODAL DE CONFIRMACION -->
+    <div class="modal fade" id="modalConfirmarVenta">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar venta</h5>
+            </div>
+
+            <div class="modal-body">
+                ¿Estás seguro de que querés registrar esta venta?
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+                </button>
+
+                <button class="btn btn-success" (click)="confirmarVenta()">
+                Confirmar
+                </button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- COMPROBANTE (DSP ELIMINAR) -->
+
+    <div *ngIf="ventaCreada" class="card mt-3 shadow-sm">
+
+    <div class="card-body">
+
+        <h4>Comprobante de Venta</h4>
+
+        <p><strong>ID:</strong> {{ ventaCreada.id }}</p>
+        <p><strong>Cliente:</strong> {{ ventaCreada.cliente.nombre }}</p>
+        <p><strong>Auto:</strong> {{ ventaCreada.auto.modelo }}</p>
+        <p><strong>Vendedor:</strong> {{ ventaCreada.vendedor.nombre }}</p>
+        <p><strong>Total:</strong> ${{ ventaCreada.total }}</p>
+
+    </div>
+
+    </div>
+</div>
