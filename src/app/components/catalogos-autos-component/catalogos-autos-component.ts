@@ -43,6 +43,7 @@ export class CatalogosAutosComponent {
 
   ngOnInit(): void {
     this.autosService.getAutos().subscribe(data => {
+      // visible == true significa que nunca fue eliminado
       this.autosList = data.filter(auto => auto.visible === true);
 
       // SOLO AUTOS DISPONIBLES
