@@ -15,6 +15,12 @@ export class AutosComponent {
               private changeDetectorRef: ChangeDetectorRef
   ) {}
 
+  autoSeleccionado: Auto | null = null;
+  seleccionarAuto(autoSeleccionado: Auto) {
+    this.autoSeleccionado = autoSeleccionado;
+  }
+
+
   autosList: Auto[] = [];
 
   // FILTRO
@@ -27,17 +33,17 @@ export class AutosComponent {
     estado: new FormControl('')
   });
 
-  // Nuevo auto FORM, El ID se crea directamente al guardar
+  // Nuevo auto FORM, El ID se crea directamente al guardar (USADO PARA EDITAR Y AÑADIR)
   formAuto = new FormGroup({
     marca: new FormControl('', Validators.required),
     modelo: new FormControl('', Validators.required),
-    anio: new FormControl(null, Validators.required),
+    anio: new FormControl<number | null>(null, Validators.required),
     version: new FormControl('', Validators.required),
-    kilometraje: new FormControl(null, Validators.required),
+    kilometraje: new FormControl<number | null>(null, Validators.required),
     combustible: new FormControl('', Validators.required),
     transmision: new FormControl('', Validators.required),
     color: new FormControl('', Validators.required),
-    precio: new FormControl(null, Validators.required),
+    precio: new FormControl<number | null>(null, Validators.required),
     descripcion: new FormControl('', Validators.required),
     imagenes: new FormArray([], Validators.required),
     estado: new FormControl('', Validators.required)
@@ -53,11 +59,6 @@ export class AutosComponent {
     this.imagenes.removeAt(index);
   }
 
-  // VER 
-
-  // ELIMINAR AUTO
-  autoSeleccionado: Auto | null = null;
-
 
   ngOnInit(): void {
     this.autosService.getAutos().subscribe(data => {
@@ -71,6 +72,68 @@ export class AutosComponent {
   getAutoById(id: number) {
     return this.autosService.getAutoById(id);
   }
+
+  // EDITAR AUTO
+  abrirEdicion(auto: Auto) {
+    this.autoSeleccionado = auto;
+
+    setTimeout(() => {
+      this.formAuto.reset();
+
+      this.formAuto.patchValue({
+        marca: auto.marca,
+        modelo: auto.modelo,
+        anio: auto.anio,
+        version: auto.version,
+        kilometraje: auto.kilometraje,
+        combustible: auto.combustible,
+        transmision: auto.transmision,
+        color: auto.color,
+        precio: auto.precio,
+        descripcion: auto.descripcion,
+        estado: auto.estado
+      });
+
+      this.imagenes.clear();
+      (auto.imagenes ?? []).forEach(img =>
+        this.imagenes.push(new FormControl(img, Validators.required))
+      );
+    });
+  }
+  
+  guardarEdicion() {
+    if(!this.autoSeleccionado) return;
+
+    if(this.formAuto.invalid){
+      this.formAuto.markAllAsTouched();
+      return;
+    }
+
+    const formValue = this.formAuto.value;
+
+    const autoActualizado: Auto = {
+      id: this.autoSeleccionado.id, // CLAVE: no cambia
+      marca: formValue.marca!,
+      modelo: formValue.modelo!,
+      anio: formValue.anio!,
+      version: formValue.version!,
+      kilometraje: formValue.kilometraje!,
+      combustible: formValue.combustible as Auto['combustible'],
+      transmision: formValue.transmision as Auto['transmision'],
+      color: formValue.color!,
+      precio: formValue.precio!,
+      descripcion: formValue.descripcion!,
+      estado: formValue.estado as Auto['estado'],
+      imagenes: (formValue.imagenes as string[]).filter(Boolean)
+    };
+
+    this.autosService.updateAuto(autoActualizado);
+
+    this.autoSeleccionado = null;
+
+    this.limpiarFormularioAuto();
+  }
+
 
   
   // AÑADIR AUTO
@@ -101,8 +164,6 @@ export class AutosComponent {
     this.autosService.addAuto(nuevoAuto);
 
     this.limpiarFormularioAuto();
-
-    console.log(nuevoAuto)
   }
 
   limpiarFormularioAuto() {
@@ -119,10 +180,6 @@ export class AutosComponent {
     if(!this.autoSeleccionado) return;
     this.autosService.deleteAuto(this.autoSeleccionado.id);
     this.autoSeleccionado = null;
-  }
-
-  seleccionarAuto(autoSeleccionado: Auto) {
-    this.autoSeleccionado = autoSeleccionado;
   }
 
 
