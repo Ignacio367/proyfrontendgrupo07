@@ -36,6 +36,11 @@ export class CatalogosAutosComponent {
     precioMaximo: new FormControl(null),
   });
 
+  // calculo del precio final mediante el descuento
+  calcularPrecioFinal(auto: Auto): number {
+    return auto.precio - (auto.precio * (auto.descuento ?? 0) / 100);
+  }
+
   ngOnInit(): void {
     this.autosService.getAutos().subscribe(data => {
       this.autosList = data;

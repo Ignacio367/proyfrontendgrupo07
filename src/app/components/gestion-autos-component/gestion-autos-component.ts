@@ -46,6 +46,7 @@ export class GestionAutosComponent {
     transmision: new FormControl('', Validators.required),
     color: new FormControl('', Validators.required),
     precio: new FormControl<number | null>(null, Validators.required),
+    descuento: new FormControl<number | null>(null, [Validators.min(0), Validators.max(100)]),
     descripcion: new FormControl('', Validators.required),
     imagenes: new FormArray([], Validators.required),
     estado: new FormControl('', Validators.required)
@@ -59,6 +60,12 @@ export class GestionAutosComponent {
   }
   eliminarImagen(index: number) {
     this.imagenes.removeAt(index);
+  }
+
+
+  // calculo del precio final mediante el descuento
+  calcularPrecioFinal(auto: Auto): number {
+    return auto.precio - (auto.precio * (auto.descuento ?? 0) / 100);
   }
 
 
@@ -92,6 +99,7 @@ export class GestionAutosComponent {
         transmision: auto.transmision,
         color: auto.color,
         precio: auto.precio,
+        descuento: auto.descuento,
         descripcion: auto.descripcion,
         estado: auto.estado
       });
@@ -122,8 +130,9 @@ export class GestionAutosComponent {
       kilometraje: formValue.kilometraje!,
       combustible: formValue.combustible as Auto['combustible'],
       transmision: formValue.transmision as Auto['transmision'],
-      color: formValue.color!,
+      color: formValue.color ?? '',
       precio: formValue.precio!,
+      descuento: formValue.descuento ?? 0,
       descripcion: formValue.descripcion!,
       estado: formValue.estado as Auto['estado'],
       imagenes: (formValue.imagenes as string[]).filter(Boolean)
@@ -136,7 +145,7 @@ export class GestionAutosComponent {
     this.limpiarFormularioAuto();
   }
 
-
+  
   
   // AÑADIR AUTO
   aniadirAuto() {
@@ -158,6 +167,7 @@ export class GestionAutosComponent {
       transmision: formValue.transmision as Auto['transmision'],
       color: formValue.color!,
       precio: formValue.precio!,
+      descuento: formValue.descuento ?? 0,
       descripcion: formValue.descripcion!,
       estado: formValue.estado as Auto['estado'],
       imagenes: formValue.imagenes || []
