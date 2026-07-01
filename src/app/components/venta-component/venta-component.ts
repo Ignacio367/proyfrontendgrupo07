@@ -54,7 +54,7 @@ export class VentaComponent {
 
     this.autosService.getAutos().subscribe(autos => {
       // Solo mostrar autos disponibles
-      this.autos = autos.filter(auto => auto.estado === 'disponible');
+      this.autos = autos.filter(auto => auto.estado === 'disponible' && auto.visible === true);
     });
 
     this.vendedoresService.getVendedores().subscribe(vendedores => {
