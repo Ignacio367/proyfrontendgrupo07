@@ -12,8 +12,6 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('proyfrontend07');
-
   currentYear = new Date().getFullYear();
 
   // email
@@ -24,7 +22,7 @@ export class App {
               private suscripcionEmailService: SuscripcionEmailsService
   ) {}
 
-  get theme() {
+  get theme(){
     return this.themeService.getCurrentTheme();
   }
 
@@ -42,7 +40,7 @@ export class App {
   guardarEmail() {
     const emailLimpio = this.email.trim();
 
-    if (!emailLimpio) return;
+    if(!emailLimpio) return;
 
     this.suscripcionEmailService.agregarEmail(emailLimpio);
 
