@@ -1,0 +1,263 @@
+<div class="container-fluid py-3 min-vh-100">
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Catálogo de Autos</h3>
+  </div>
+
+  <!-- FILTROS -->
+  <form [formGroup]="filtrosForm">
+    <div class="card shadow-sm mb-3 w-100">
+      <div class="card-body">
+
+        <!-- FILA 1 -->
+        <div class="row g-3 align-items-end">
+
+          <!-- BUSQUEDA -->
+          <div class="col-lg-5 col-md-12">
+            <input
+              type="text"
+              class="form-control"
+              formControlName="texto"
+              placeholder="Buscar marca o modelo"
+              (keydown.enter)="filtrarAutos()"
+            >
+          </div>
+
+          <!-- MARCA -->
+          <div class="col-lg-3 col-md-4">
+            <select class="form-select" formControlName="marca">
+              <option value="">Marca</option>
+              <option>Toyota</option>
+              <option>Fiat</option>
+              <option>Ford</option>
+            </select>
+          </div>
+
+          <!-- AÑO -->
+          <div class="col-lg-2 col-md-4">
+            <select class="form-select" formControlName="anio">
+              <option value="">Año</option>
+              <option>2024</option>
+              <option>2023</option>
+              <option>2022</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- FILA 2 -->
+        <div class="row g-3 mt-2 align-items-end">
+
+          <!-- PRECIO MIN -->
+          <div class="col-lg-3 col-md-6">
+            <input
+              type="number"
+              class="form-control"
+              formControlName="precioMinimo"
+              placeholder="Precio mínimo"
+            >
+          </div>
+
+          <!-- PRECIO MAX -->
+          <div class="col-lg-3 col-md-6">
+            <input
+              type="number"
+              class="form-control"
+              formControlName="precioMaximo"
+              placeholder="Precio máximo"
+            >
+          </div>
+
+          <!-- BOTÓN FILTRAR -->
+          <div class="col-lg-3 col-md-6 d-grid">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="filtrarAutos()"
+            >
+              <i class="bi bi-funnel me-1"></i>
+              Filtrar
+            </button>
+          </div>
+
+          <!-- BOTÓN LIMPIAR -->
+          <div class="col-lg-3 col-md-6 d-grid">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="limpiarFiltros()"
+            >
+              <i class="bi bi-x-circle me-1"></i>
+              Limpiar
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+  <!-- LISTA -->
+  <div class="row">
+
+    <div class="col-md-4 mb-3" *ngFor="let auto of filteredAutosList">
+
+      <div class="card h-100 shadow-sm">
+
+        <img
+          [src]="auto.imagenes[0]"
+          class="card-img-top"
+          style="height: 180px; object-fit: cover;"
+        >
+
+        <div class="card-body">
+
+          <h5 class="card-title mb-1">
+            {{ auto.marca }} {{ auto.modelo }} {{ auto.anio }}
+          </h5>
+
+          <small class="text-secondary">
+            {{ auto.version }}
+          </small>
+
+          <hr>
+
+          <p class="mb-1">
+            <strong>Precio:</strong>
+            <span class="text-primary fw-semibold">
+              ${{ auto.precio }}
+            </span>
+          </p>
+
+          <p class="mb-1">
+            <strong>Kilometraje:</strong>
+            {{ auto.kilometraje }} km
+          </p>
+
+          <p class="mb-2">
+            <strong>Color:</strong>
+            {{ auto.color }}
+          </p>
+
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+          <button
+            class="btn btn-outline-primary btn-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#modalDetalle"
+            (click)="seleccionarAuto(auto)"
+          >
+            <i class="bi bi-eye me-1"></i>
+            Detalle
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL DETALLE -->
+  <div class="modal fade" id="modalDetalle" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- HEADER -->
+        <div class="modal-header">
+          <div>
+            <h5 class="modal-title mb-0">
+              {{ autoSeleccionado?.marca }} {{ autoSeleccionado?.modelo }}
+            </h5>
+            <small class="text-muted">
+              ID: {{ autoSeleccionado?.id }}
+            </small>
+          </div>
+
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- BODY -->
+        <div class="modal-body" *ngIf="autoSeleccionado">
+
+          <div class="row g-3">
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Marca</div>
+              <div>{{ autoSeleccionado.marca }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Modelo</div>
+              <div>{{ autoSeleccionado.modelo }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Año</div>
+              <div>{{ autoSeleccionado.anio }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Versión</div>
+              <div>{{ autoSeleccionado.version }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Kilometraje</div>
+              <div>{{ autoSeleccionado.kilometraje }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Combustible</div>
+              <div>{{ autoSeleccionado.combustible }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Transmisión</div>
+              <div>{{ autoSeleccionado.transmision }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Color</div>
+              <div>{{ autoSeleccionado.color }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Precio</div>
+              <div>${{ autoSeleccionado.precio }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="text-muted">Estado</div>
+              <div>{{ autoSeleccionado.estado }}</div>
+            </div>
+
+            <div class="col-12">
+              <div class="text-muted">Descripción</div>
+              <div>{{ autoSeleccionado.descripcion }}</div>
+            </div>
+
+            <div class="col-12" *ngIf="autoSeleccionado.imagenes.length">
+              <div class="text-muted mb-2">Imágenes</div>
+
+              <div class="d-flex flex-wrap gap-2">
+                <img
+                  *ngFor="let img of autoSeleccionado.imagenes"
+                  [src]="img"
+                  class="img-thumbnail"
+                >
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>

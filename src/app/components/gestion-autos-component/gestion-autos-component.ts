@@ -4,13 +4,13 @@ import { Auto, AutosService } from '../../services/autos-service';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-autos-component',
+  selector: 'app-gestion-autos-component',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './autos-component.html',
-  styleUrl: './autos-component.css',
+  templateUrl: './gestion-autos-component.html',
+  styleUrl: './gestion-autos-component.css',
 })
 
-export class AutosComponent {
+export class GestionAutosComponent {
   constructor(private autosService: AutosService,
               private changeDetectorRef: ChangeDetectorRef
   ) {}
@@ -30,7 +30,9 @@ export class AutosComponent {
     texto: new FormControl(''),
     marca: new FormControl(''),
     anio: new FormControl(''),
-    estado: new FormControl('')
+    estado: new FormControl(''),
+    precioMinimo: new FormControl(null),
+    precioMaximo: new FormControl(null),
   });
 
   // Nuevo auto FORM, El ID se crea directamente al guardar (USADO PARA EDITAR Y AÑADIR)
@@ -184,29 +186,55 @@ export class AutosComponent {
 
 
   // FILTROS
-  filtrarAutos() {
+  filtrarAutos(){
     const filtros = this.filtrosForm.value;
+
+    const texto = (filtros.texto ?? '').toLowerCase();
+    const marca = filtros.marca;
+    const anio = filtros.anio;
+    const estado = filtros.estado;
+
+    const precioMinimo = filtros.precioMinimo;
+    const precioMaximo = filtros.precioMaximo;
 
     this.filteredAutosList = this.autosList.filter(auto => {
 
+      // TEXTO (marca o modelo)
       const coincideTexto =
-        auto.marca.toLowerCase().includes((filtros.texto ?? '').toLowerCase()) ||
-        auto.modelo.toLowerCase().includes((filtros.texto ?? '').toLowerCase());
+        auto.marca.toLowerCase().includes(texto) ||
+        auto.modelo.toLowerCase().includes(texto);
 
+      // MARCA
       const coincideMarca =
-        filtros.marca ? auto.marca === filtros.marca : true;
+        marca ? auto.marca === marca : true;
 
+      // AÑO
       const coincideAnio =
-        filtros.anio ? auto.anio == +filtros.anio : true;
+        anio ? auto.anio == +anio : true;
 
+      // ESTADO
       const coincideEstado =
-        filtros.estado ? auto.estado === filtros.estado : true;
+        estado ? auto.estado === estado : true;
 
-      return coincideTexto && coincideMarca && coincideAnio && coincideEstado;
+      // PRECIO (RANGO)
+      const coincidePrecio =
+        (precioMinimo != null ? auto.precio >= precioMinimo : true) &&
+        (precioMaximo != null ? auto.precio <= precioMaximo : true);
+
+      return (
+        coincideTexto &&
+        coincideMarca &&
+        coincideAnio &&
+        coincideEstado &&
+        coincidePrecio
+      );
     });
   }
+
+
   limpiarFiltros() {
     this.filtrosForm.reset();
     this.filteredAutosList = this.autosList;
   }
+
 }
