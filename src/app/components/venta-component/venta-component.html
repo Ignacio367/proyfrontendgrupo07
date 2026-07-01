@@ -12,10 +12,12 @@
           <!-- CLIENTE -->
           <div class="col-md-4">
             <label class="form-label">Cliente</label>
-            <select class="form-select" formControlName="cliente">
+            <select class="form-select" formControlName="clienteId">
               <option [ngValue]="null">Seleccionar cliente</option>
-              <option *ngFor="let c of clientes" [ngValue]="c">
-                {{ c.nombre }}
+              <option
+                *ngFor="let c of clientes"
+                [ngValue]="c.clienteId">
+                {{ c.nombre }} {{ c.apellido }}
               </option>
             </select>
           </div>
@@ -23,10 +25,12 @@
           <!-- AUTO -->
           <div class="col-md-4">
             <label class="form-label">Auto</label>
-            <select class="form-select" formControlName="auto">
+            <select class="form-select" formControlName="autoId">
               <option [ngValue]="null">Seleccionar auto</option>
-              <option *ngFor="let a of autos" [ngValue]="a">
-                {{ a.modelo }} - ${{ a.precio }}
+              <option
+                *ngFor="let a of autos"
+                [ngValue]="a.id">
+                {{ a.marca }} {{ a.modelo }} {{ a.anio }} - ${{ a.precio }}
               </option>
             </select>
           </div>
@@ -34,10 +38,12 @@
           <!-- VENDEDOR -->
           <div class="col-md-4">
             <label class="form-label">Vendedor</label>
-            <select class="form-select" formControlName="vendedor">
+            <select class="form-select" formControlName="vendedorId">
               <option [ngValue]="null">Seleccionar vendedor</option>
-              <option *ngFor="let v of vendedores" [ngValue]="v">
-                {{ v.nombre }}
+              <option
+                *ngFor="let v of vendedores"
+                [ngValue]="v.vendedorId">
+                {{ v.nombre }} {{ v.apellido }}
               </option>
             </select>
           </div>
@@ -46,38 +52,121 @@
 
         <hr class="my-4">
 
-        <!-- RESUMEN -->
-        <div class="mb-3">
-          <h5>Resumen</h5>
+        <!-- DATOS DE LA VENTA -->
+        <div class="row g-3">
 
+          <div class="col-md-6">
+            <label class="form-label">Método de pago</label>
+
+            <select class="form-select" formControlName="metodoPago">
+              <option value="efectivo">Efectivo</option>
+              <option value="transferencia">Transferencia</option>
+              <option value="tarjeta">Tarjeta</option>
+              <option value="financiado">Financiado</option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Cuotas</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="cuotas">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Descuento (%)</label>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="descuento">
+          </div>
+
+          <div class="col-12">
+            <label class="form-label">Observaciones</label>
+            <textarea
+              class="form-control"
+              rows="3"
+              formControlName="observaciones">
+            </textarea>
+          </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <!-- RESUMEN -->
+        <div>
+
+          <h5 class="mb-3">Resumen de la venta</h5>
+
+          <!-- Cliente -->
           <p class="mb-1">
             <strong>Cliente:</strong>
-            {{ ventaForm.value.cliente?.nombre || '-' }}
+            {{ clienteSeleccionado?.nombre }}
+            {{ clienteSeleccionado?.apellido || '-' }}
           </p>
 
+
+          <!-- Auto -->
           <p class="mb-1">
             <strong>Auto:</strong>
-            {{ ventaForm.value.auto?.modelo || '-' }}
+            {{ autoSeleccionado?.marca }}
+            {{ autoSeleccionado?.modelo || '-' }}
           </p>
 
+          <!-- Precio -->
           <p class="mb-1">
             <strong>Precio:</strong>
-            ${{ ventaForm.value.auto?.precio || 0 }}
-          </p>
+
+            <!-- Se usa cuando querés aplicar un *ngIf, *ngFor, etc., sin agregar un <div> innecesario. -->
+            <ng-container *ngIf="tieneDescuento; else sinDescuento"> 
+
+                <span class="text-decoration-line-through text-secondary me-2">
+                ${{ autoSeleccionado?.precio }}
+                </span>
+
+                <span class="text-success fw-bold">
+                ${{ precioFinal }}
+                </span>
+
+            </ng-container>
+
+            <!-- ng-template guarda un bloque de HTML, pero NO lo renderiza automáticamente.
+                En este caso se renderizo como else del anterior container 
+            -->
+            <ng-template #sinDescuento>
+
+                <span class="fw-semibold">
+                ${{ autoSeleccionado?.precio || 0 }}
+                </span>
+
+            </ng-template>
+        </p>
+
+
 
           <p class="mb-1">
             <strong>Vendedor:</strong>
-            {{ ventaForm.value.vendedor?.nombre || '-' }}
+            {{ vendedorSeleccionado?.nombre }}
+            {{ vendedorSeleccionado?.apellido || '-' }}
           </p>
+
+
         </div>
 
-        <!-- BOTÓN -->
+        <hr>
+
         <button
           type="button"
           class="btn btn-success w-100"
-          (click)="crearVenta()"
-        >
+          data-bs-toggle="modal"
+          data-bs-target="#modalConfirmarVenta"
+          [disabled]="ventaForm.invalid"
+          >
+
           Confirmar venta
+
         </button>
 
       </div>
@@ -85,51 +174,118 @@
 
   </form>
 
+  <!-- MODAL CONFIRMAR -->
+  <div
+    class="modal fade"
+    id="modalConfirmarVenta"
+    tabindex="-1">
 
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
 
-  <!-- MODAL DE CONFIRMACION -->
-    <div class="modal fade" id="modalConfirmarVenta">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            Confirmar venta
+          </h5>
 
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar venta</h5>
-            </div>
-
-            <div class="modal-body">
-                ¿Estás seguro de que querés registrar esta venta?
-            </div>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-                </button>
-
-                <button class="btn btn-success" (click)="confirmarVenta()">
-                Confirmar
-                </button>
-            </div>
-
-            </div>
+          <button
+            class="btn-close"
+            data-bs-dismiss="modal">
+          </button>
         </div>
+
+        <div class="modal-body">
+
+          ¿Está seguro de registrar esta venta?
+
+        </div>
+
+        <div class="modal-footer">
+
+          <button
+            class="btn btn-secondary"
+            data-bs-dismiss="modal">
+
+            Cancelar
+
+          </button>
+
+          <button
+            class="btn btn-success"
+            data-bs-dismiss="modal"
+            (click)="confirmarVenta()">
+
+            Confirmar
+
+          </button>
+
+        </div>
+
+      </div>
     </div>
+  </div>
 
+  <!-- COMPROBANTE
+  <div
+    *ngIf="ventaCreada"
+    class="card shadow-sm mt-4">
 
-    <!-- COMPROBANTE (DSP ELIMINAR) -->
-
-    <div *ngIf="ventaCreada" class="card mt-3 shadow-sm">
+    <div class="card-header">
+      <h5 class="mb-0">Comprobante de Venta</h5>
+    </div>
 
     <div class="card-body">
 
-        <h4>Comprobante de Venta</h4>
+      <p>
+        <strong>N° Venta:</strong>
+        {{ ventaCreada.ventaId }}
+      </p>
 
-        <p><strong>ID:</strong> {{ ventaCreada.id }}</p>
-        <p><strong>Cliente:</strong> {{ ventaCreada.cliente.nombre }}</p>
-        <p><strong>Auto:</strong> {{ ventaCreada.auto.modelo }}</p>
-        <p><strong>Vendedor:</strong> {{ ventaCreada.vendedor.nombre }}</p>
-        <p><strong>Total:</strong> ${{ ventaCreada.total }}</p>
+      <p>
+        <strong>Cliente:</strong>
+        {{ clienteSeleccionado?.nombre }}
+        {{ clienteSeleccionado?.apellido }}
+      </p>
+
+      <p>
+        <strong>Auto:</strong>
+        {{ autoSeleccionado?.marca }}
+        {{ autoSeleccionado?.modelo }}
+      </p>
+
+      <p>
+        <strong>Vendedor:</strong>
+        {{ vendedorSeleccionado?.nombre }}
+        {{ vendedorSeleccionado?.apellido }}
+      </p>
+
+      <p>
+        <strong>Método de pago:</strong>
+        {{ ventaCreada.metodoPago }}
+      </p>
+
+      <p *ngIf="ventaCreada.cuotas">
+        <strong>Cuotas:</strong>
+        {{ ventaCreada.cuotas }}
+      </p>
+
+      <p *ngIf="ventaCreada.descuento">
+        <strong>Descuento:</strong>
+        ${{ ventaCreada.descuento }}
+      </p>
+
+      <p>
+        <strong>Precio Final:</strong>
+        ${{ ventaCreada.precioFinal || autoSeleccionado?.precio }}
+      </p>
+
+      <p *ngIf="ventaCreada.observaciones">
+        <strong>Observaciones:</strong>
+        {{ ventaCreada.observaciones }}
+      </p>
 
     </div>
 
-    </div>
+  </div> -->
+
 </div>
