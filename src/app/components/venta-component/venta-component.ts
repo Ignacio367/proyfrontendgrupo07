@@ -128,7 +128,6 @@ export class VentaComponent {
   }
 
   // CONFIRMACION VENTA
-
   confirmarVenta(): void {
 
     if(this.ventaForm.invalid) return;
@@ -149,6 +148,14 @@ export class VentaComponent {
     console.log(venta)
     this.ventaCreada = venta;
 
+    // Actualizacion estado del auto (a vendido)
+    let auto: Auto | undefined = this.autosService.getAutoById(venta.autoId);
+    if(auto){
+      this.autosService.updateAuto({...auto, estado: "vendido"})
+    }
+
+
+    // reseteo ventas
     this.ventaForm.reset({
       clienteId: null,
       autoId: null,
