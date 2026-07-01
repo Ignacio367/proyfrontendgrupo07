@@ -4,13 +4,13 @@ import { Auto, AutosService } from '../../services/autos-service';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-autos-component',
+  selector: 'app-gestion-autos-component',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './autos-component.html',
-  styleUrl: './autos-component.css',
+  templateUrl: './gestion-autos-component.html',
+  styleUrl: './gestion-autos-component.css',
 })
 
-export class AutosComponent {
+export class GestionAutosComponent {
   constructor(private autosService: AutosService,
               private changeDetectorRef: ChangeDetectorRef
   ) {}
@@ -236,4 +236,5 @@ export class AutosComponent {
     this.filtrosForm.reset();
     this.filteredAutosList = this.autosList;
   }
+
 }
