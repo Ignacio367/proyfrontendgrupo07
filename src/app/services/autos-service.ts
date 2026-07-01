@@ -12,6 +12,7 @@ export interface Auto {
   transmision: 'manual' | 'automatica';
   color: string;
   precio: number;
+  descuento: number,
   descripcion: string;
   estado: 'disponible' | 'reservado' | 'vendido';
   imagenes: string[];
@@ -35,6 +36,7 @@ export class AutosService {
       transmision: 'automatica',
       color: 'blanco',
       precio: 18000,
+      descuento: 0,
       descripcion: 'Sedán cómodo y confiable',
       estado: 'disponible',
       imagenes: ['assets/autos/corolla.jpg']
@@ -50,6 +52,7 @@ export class AutosService {
       transmision: 'manual',
       color: 'gris',
       precio: 17000,
+      descuento: 40,
       descripcion: 'Compacto deportivo',
       estado: 'reservado',
       imagenes: ['assets/autos/golf.jpg']
@@ -65,6 +68,7 @@ export class AutosService {
       transmision: 'manual',
       color: 'negro',
       precio: 15000,
+      descuento: 10,
       descripcion: 'Económico y eficiente',
       estado: 'vendido',
       imagenes: ['assets/autos/focus.jpg']

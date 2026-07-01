@@ -89,20 +89,46 @@
 
                 <!-- COLOR -->
                 <div class="col-md-4">
-                <label class="form-label">Color</label>
-                <input class="form-control" formControlName="color">
+                    <label class="form-label">Color</label>
+                    <input class="form-control" formControlName="color">
                 </div>
 
                 <!-- PRECIO -->
                 <div class="col-md-6">
-                <label class="form-label">Precio</label>
-                <input type="number" class="form-control" formControlName="precio">
+                    <label class="form-label">Precio</label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        formControlName="precio">
+                </div>
+
+                <!-- DESCUENTO -->
+                <div class="col-md-6">
+                    <label class="form-label">Descuento (%)</label>
+                    <input
+                        type="number"
+                        class="form-control"
+                        formControlName="descuento"
+                        min="0"
+                        max="100"
+                        placeholder="">
+                    <small class="text-secondary">
+                        Opcional. Se aplicará sobre el precio de venta.
+                    </small>
+                </div>
+
+                <!-- DESCRIPCIÓN -->
+                <div class="col-md-6">
+                    <label class="form-label">Descripción</label>
+                    <input
+                        class="form-control"
+                        formControlName="descripcion">
                 </div>
 
                 <!-- DESCRIPCION -->
                 <div class="col-md-6">
-                <label class="form-label">Descripción</label>
-                <input class="form-control" formControlName="descripcion">
+                    <label class="form-label">Descripción</label>
+                    <input class="form-control" formControlName="descripcion">
                 </div>
                 
 
@@ -297,9 +323,30 @@
 
             <p class="mb-1">
                 <strong>Precio:</strong>
-                <span class="text-primary fw-semibold">
-                    ${{ auto.precio }}
-                </span>
+
+                <ng-container *ngIf="auto.descuento && auto.descuento > 0; else sinDescuento">
+
+                    <span class="text-decoration-line-through text-secondary me-2">
+                        ${{ auto.precio }}
+                    </span>
+
+                    <span class="text-success fw-bold me-2">
+                        ${{ calcularPrecioFinal(auto) }}
+                    </span>
+
+                    <span class="badge bg-info text-dark">
+                        {{ auto.descuento }}% OFF
+                    </span>
+
+                </ng-container>
+
+                <ng-template #sinDescuento>
+
+                    <span class="text-primary fw-semibold">
+                        ${{ auto.precio }}
+                    </span>
+
+                </ng-template>
             </p>
 
             <p class="mb-1">
@@ -434,14 +481,40 @@
 
                             <!-- PRECIO -->
                             <div class="col-md-6">
-                            <label class="form-label">Precio</label>
-                            <input type="number" class="form-control" formControlName="precio">
+                                <label class="form-label">Precio</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    formControlName="precio">
+                            </div>
+
+                            <!-- DESCUENTO -->
+                            <div class="col-md-6">
+                                <label class="form-label">Descuento (%)</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    formControlName="descuento"
+                                    min="0"
+                                    max="100"
+                                    placeholder="">
+                                <small class="text-secondary">
+                                    Opcional. Se aplicará sobre el precio de venta.
+                                </small>
+                            </div>
+
+                            <!-- DESCRIPCIÓN -->
+                            <div class="col-md-6">
+                                <label class="form-label">Descripción</label>
+                                <input
+                                    class="form-control"
+                                    formControlName="descripcion">
                             </div>
 
                             <!-- DESCRIPCION -->
                             <div class="col-md-6">
-                            <label class="form-label">Descripción</label>
-                            <input class="form-control" formControlName="descripcion">
+                                <label class="form-label">Descripción</label>
+                                <input class="form-control" formControlName="descripcion">
                             </div>
                             
 
@@ -519,6 +592,8 @@
     </div>
 
 
+
+
     <!-- MODAL DETALLE -->
     <div class="modal fade" id="modalDetalle" tabindex="-1">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -530,6 +605,7 @@
             <h5 class="modal-title mb-0">
                 {{ autoSeleccionado?.marca }} {{ autoSeleccionado?.modelo }}
             </h5>
+
             <small class="text-muted">
                 ID: {{ autoSeleccionado?.id }}
             </small>
@@ -583,16 +659,35 @@
                 <div>{{ autoSeleccionado.color }}</div>
             </div>
 
+            <!-- PRECIO ORIGINAL -->
             <div class="col-6 col-md-3">
                 <div class="text-muted">Precio</div>
                 <div>${{ autoSeleccionado.precio }}</div>
             </div>
 
+            <!-- DESCUENTO -->
+            <div class="col-6 col-md-3" *ngIf="autoSeleccionado.descuento">
+                <div class="text-muted">Descuento</div>
+                <div class="text-success">
+                {{ autoSeleccionado.descuento }}%
+                </div>
+            </div>
+
+            <!-- PRECIO FINAL -->
+            <div class="col-6 col-md-3" *ngIf="autoSeleccionado.descuento">
+                <div class="text-muted">Precio final</div>
+                <div class="fw-bold text-primary">
+                ${{ calcularPrecioFinal(autoSeleccionado) }}
+                </div>
+            </div>
+
+            <!-- ESTADO -->
             <div class="col-6 col-md-3">
                 <div class="text-muted">Estado</div>
                 <div>{{ autoSeleccionado.estado }}</div>
             </div>
 
+            <!-- DESCRIPCIÓN -->
             <div class="col-12">
                 <div class="text-muted">Descripción</div>
                 <div>{{ autoSeleccionado.descripcion }}</div>
