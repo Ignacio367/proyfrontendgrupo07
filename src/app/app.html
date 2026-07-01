@@ -68,13 +68,18 @@
         <button class="btn btn-outline-light btn-sm d-flex align-items-center gap-2"
                 (click)="toggleTheme()">
 
-          <i class="bi" [ngClass]="theme === 'dark' ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i>
+          <i class="bi"
+             [ngClass]="theme === 'dark'
+                ? 'bi-moon-stars-fill'
+                : 'bi-sun-fill'">
+          </i>
 
           <span>
             {{ theme === 'dark' ? 'Dark' : 'Light' }}
           </span>
 
         </button>
+
       </div>
 
     </div>
