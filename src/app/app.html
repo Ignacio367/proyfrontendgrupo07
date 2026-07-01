@@ -136,17 +136,26 @@
           </label>
 
           <div class="input-group input-group-sm">
-
             <input
               type="email"
+              name="email"
               class="form-control"
+              [(ngModel)]="email"
               placeholder="tuemail@ejemplo.com">
 
-            <button class="btn btn-outline-light" type="button">
+            <button
+              class="btn btn-outline-light"
+              type="button"
+              (click)="guardarEmail()">
               Enviar
             </button>
-
           </div>
+
+          <small
+            *ngIf="mensajeEmail"
+            class="text-success d-block mt-2">
+            {{ mensajeEmail }}
+          </small>
 
           <small class="text-secondary d-block mt-2">
             Recibí actualizaciones sobre nuevos vehículos y promociones.
