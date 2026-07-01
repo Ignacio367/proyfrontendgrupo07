@@ -87,7 +87,6 @@ export class AutosService {
 
   // Añade un auto
   addAuto(auto: Auto): void {
-    auto.id = this.autos.length + 1;
     this.autos.push(auto);
     this.autosSubject.next(this.autos);
   }

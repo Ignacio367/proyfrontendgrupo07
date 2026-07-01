@@ -27,20 +27,20 @@ export class AutosComponent {
     estado: new FormControl('')
   });
 
-  // Nuevo auto FORM
+  // Nuevo auto FORM, El ID se crea directamente al guardar
   formAuto = new FormGroup({
-    marca: new FormControl('', [Validators.required]),
-    modelo: new FormControl('', [Validators.required]),
-    anio: new FormControl(null, [Validators.required]),
-    version: new FormControl('', [Validators.required]),
-    kilometraje: new FormControl(null, [Validators.required]),
-    combustible: new FormControl('', [Validators.required]),
-    transmision: new FormControl('', [Validators.required]),
-    color: new FormControl('', [Validators.required]),
-    precio: new FormControl(null, [Validators.required]),
-    descripcion: new FormControl('', [Validators.required]),
+    marca: new FormControl('', Validators.required),
+    modelo: new FormControl('', Validators.required),
+    anio: new FormControl(null, Validators.required),
+    version: new FormControl('', Validators.required),
+    kilometraje: new FormControl(null, Validators.required),
+    combustible: new FormControl('', Validators.required),
+    transmision: new FormControl('', Validators.required),
+    color: new FormControl('', Validators.required),
+    precio: new FormControl(null, Validators.required),
+    descripcion: new FormControl('', Validators.required),
     imagenes: new FormArray([], Validators.required),
-    estado: new FormControl('', [Validators.required])
+    estado: new FormControl('', Validators.required)
   });
 
   get imagenes() {
@@ -53,9 +53,10 @@ export class AutosComponent {
     this.imagenes.removeAt(index);
   }
 
+  // VER 
 
   // ELIMINAR AUTO
-  autoAEliminar: Auto | null = null;
+  autoSeleccionado: Auto | null = null;
 
 
   ngOnInit(): void {
@@ -82,7 +83,7 @@ export class AutosComponent {
     const formValue = this.formAuto.value;
 
     const nuevoAuto: Auto = {
-      id: Date.now(),
+      id: Date.now(), // ID EN BASE A LA FECHA
       marca: formValue.marca!,
       modelo: formValue.modelo!,
       anio: formValue.anio!,
@@ -100,6 +101,8 @@ export class AutosComponent {
     this.autosService.addAuto(nuevoAuto);
 
     this.limpiarFormularioAuto();
+
+    console.log(nuevoAuto)
   }
 
   limpiarFormularioAuto() {
@@ -113,13 +116,13 @@ export class AutosComponent {
 
   // ELIMINAR AUTO
   eliminarAuto() {
-    if(!this.autoAEliminar) return;
-    this.autosService.deleteAuto(this.autoAEliminar.id);
-    this.autoAEliminar = null;
+    if(!this.autoSeleccionado) return;
+    this.autosService.deleteAuto(this.autoSeleccionado.id);
+    this.autoSeleccionado = null;
   }
 
-  seleccionarAutoAEliminar(autoAEliminar: Auto) {
-    this.autoAEliminar = autoAEliminar;
+  seleccionarAuto(autoSeleccionado: Auto) {
+    this.autoSeleccionado = autoSeleccionado;
   }
 
 

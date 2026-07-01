@@ -246,84 +246,193 @@
         </div>
     </form>
 
-  <!-- LISTA -->
-  <div class="row">
+    <!-- LISTA -->
+    <div class="row">
 
-    <div class="col-md-4 mb-3" *ngFor="let auto of filteredAutosList">
+        <div class="col-md-4 mb-3" *ngFor="let auto of filteredAutosList">
 
-      <div class="card h-100 shadow-sm">
+        <div class="card h-100 shadow-sm">
 
-        <img [src]="auto.imagenes[0]"
-             class="card-img-top"
-             style="height: 180px; object-fit: cover;">
+            <img [src]="auto.imagenes[0]"
+                class="card-img-top"
+                style="height: 180px; object-fit: cover;">
 
-        <div class="card-body">
+            <div class="card-body">
 
-          <h5 class="card-title mb-1">
-            {{ auto.marca }} {{ auto.modelo }} {{ auto.anio }}
-          </h5>
+            <h5 class="card-title mb-1">
+                {{ auto.marca }} {{ auto.modelo }} {{ auto.anio }}
+            </h5>
 
-          <small class="text-secondary">
-            {{ auto.version }}
-          </small>
+            <small class="text-secondary">
+                {{ auto.version }}
+            </small>
 
-          <hr>
+            <hr>
 
-          <p class="mb-1">
-            <strong>Precio:</strong>
-            <span class="text-primary fw-semibold">
-                ${{ auto.precio }}
+            <p class="mb-1">
+                <strong>Precio:</strong>
+                <span class="text-primary fw-semibold">
+                    ${{ auto.precio }}
+                </span>
+            </p>
+
+            <p class="mb-1">
+                <strong>Kilometraje:</strong>
+                {{ auto.kilometraje }} km
+            </p>
+
+            <p class="mb-2">
+                <strong>Color:</strong>
+                {{ auto.color }}
+            </p>
+
+            <span class="badge"
+                    [ngClass]="{
+                    'bg-success': auto.estado === 'disponible',
+                    'bg-warning text-dark': auto.estado === 'reservado',
+                    'bg-danger': auto.estado === 'vendido'
+                    }">
+
+                {{ auto.estado }}
+
             </span>
-        </p>
 
-          <p class="mb-1">
-            <strong>Kilometraje:</strong>
-            {{ auto.kilometraje }} km
-          </p>
+            </div>
 
-          <p class="mb-2">
-            <strong>Color:</strong>
-            {{ auto.color }}
-          </p>
 
-          <span class="badge"
-                [ngClass]="{
-                  'bg-success': auto.estado === 'disponible',
-                  'bg-warning text-dark': auto.estado === 'reservado',
-                  'bg-danger': auto.estado === 'vendido'
-                }">
+            <div class="card-footer d-flex justify-content-between">
+                <button
+                    class="btn btn-outline-primary btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalDetalle"
+                    (click)="seleccionarAuto(auto)">
+                    <i class="bi bi-eye me-1"></i>
+                    Detalle
+                </button>
 
-            {{ auto.estado }}
+                <button class="btn btn-primary btn-sm">
+                    <i class="bi bi-pencil me-1"></i>
+                    Editar
+                </button>
 
-          </span>
-
+                <button
+                    class="btn btn-danger btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalEliminar"
+                    (click)="seleccionarAuto(auto)">
+                    Eliminar
+                </button>
+            </div>
         </div>
-
-
-        <div class="card-footer d-flex justify-content-between">
-            <button class="btn btn-outline-primary btn-sm">
-                <i class="bi bi-eye me-1"></i>
-                Detalle
-            </button>
-
-            <button class="btn btn-primary btn-sm">
-                <i class="bi bi-pencil me-1"></i>
-                Editar
-            </button>
-
-            <button
-                class="btn btn-danger btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#modalEliminar"
-                (click)="seleccionarAutoAEliminar(auto)">
-                Eliminar
-            </button>
         </div>
-      </div>
     </div>
-  </div>
 
-    
+
+    <!-- MODAL DETALLE -->
+    <div class="modal fade" id="modalDetalle" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+        <!-- HEADER -->
+        <div class="modal-header">
+            <div>
+            <h5 class="modal-title mb-0">
+                {{ autoSeleccionado?.marca }} {{ autoSeleccionado?.modelo }}
+            </h5>
+            <small class="text-muted">
+                ID: {{ autoSeleccionado?.id }}
+            </small>
+            </div>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- BODY -->
+        <div class="modal-body" *ngIf="autoSeleccionado">
+
+            <div class="row g-3">
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Marca</div>
+                <div>{{ autoSeleccionado.marca }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Modelo</div>
+                <div>{{ autoSeleccionado.modelo }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Año</div>
+                <div>{{ autoSeleccionado.anio }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Versión</div>
+                <div>{{ autoSeleccionado.version }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Kilometraje</div>
+                <div>{{ autoSeleccionado.kilometraje }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Combustible</div>
+                <div>{{ autoSeleccionado.combustible }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Transmisión</div>
+                <div>{{ autoSeleccionado.transmision }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Color</div>
+                <div>{{ autoSeleccionado.color }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Precio</div>
+                <div>${{ autoSeleccionado.precio }}</div>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <div class="text-muted">Estado</div>
+                <div>{{ autoSeleccionado.estado }}</div>
+            </div>
+
+            <div class="col-12">
+                <div class="text-muted">Descripción</div>
+                <div>{{ autoSeleccionado.descripcion }}</div>
+            </div>
+
+            <!-- IMÁGENES -->
+            <div class="col-12" *ngIf="autoSeleccionado.imagenes.length">
+
+                <div class="text-muted mb-2">Imágenes</div>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                <img
+                    *ngFor="let img of autoSeleccionado.imagenes"
+                    [src]="img"
+                    class="img-thumbnail">
+
+                </div>
+
+            </div>
+
+            </div>
+
+        </div>
+
+        </div>
+    </div>
+    </div>
+
+
+
     <!-- MODAL ELIMINACION DE AUTO -->
     <div class="modal fade" id="modalEliminar" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
@@ -339,8 +448,8 @@
                 ¿Seguro que querés eliminar el auto?
                 </p>
 
-                <div *ngIf="autoAEliminar">
-                <strong>{{ autoAEliminar.marca }} {{ autoAEliminar.modelo }}</strong>
+                <div *ngIf="autoSeleccionado">
+                <strong>{{ autoSeleccionado.marca }} {{ autoSeleccionado.modelo }}</strong>
                 </div>
             </div>
 
@@ -360,6 +469,7 @@
             </div>
         </div>
     </div>
+
 
 
 </div>
